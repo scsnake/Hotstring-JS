@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotstring.js Options Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
+        .scroller::-webkit-scrollbar { width: 8px; }
+        .scroller::-webkit-scrollbar-track { background: #f1f1f1; }
+        .scroller::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .scroller::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        @keyframes blink { 50% { opacity: 0; } }
+        .cursor-blink { animation: blink 1s step-end infinite; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+            <div class="bg-indigo-600 text-white p-2 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-slate-900">Hotstring.js</h1>
+                <p class="text-xs text-slate-500 font-medium">AHK Options & Regex Demo</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <span id="statusBadge" class="text-xs font-bold bg-green-100 text-green-700 px-2 py-1.5 rounded">Ready</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex overflow-hidden">
+        
+        <!-- Left Panel: Documentation & Config -->
+        <section class="w-1/3 border-r border-slate-200 bg-white flex flex-col overflow-hidden z-10 shadow-lg p-5">
+            <h2 class="font-semibold text-slate-800 mb-4">Triggers & Output Options</h2>
+            
+            <div class="space-y-4 overflow-y-auto scroller flex-1">
+                
+                <!-- Asterisk & Question Mark -->
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-sm">
+                    <p class="font-bold text-slate-700 mb-1">1. Triggers (* and ?)</p>
+                    <div class="flex flex-col gap-2 mt-2">
+                        <div>
+                            <code class="text-indigo-600 text-xs">:*:btw</code> 
+                            <span class="text-xs text-slate-500 block">Immediate (No Space needed).</span>
+                        </div>
+                        <div>
+                            <code class="text-indigo-600 text-xs">:?:al</code> 
+                            <span class="text-xs text-slate-500 block">Inside word (type "practic<b>al</b>").</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- B0 & O -->
+                <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-200 text-sm">
+                    <p class="font-bold text-indigo-800 mb-1">2. Output Control (B0 and O)</p>
+                     <div class="flex flex-col gap-2 mt-2">
+                        <div>
+                            <code class="text-indigo-700 text-xs">:B0O:&lt;em&gt;</code> 
+                            <span class="text-xs text-indigo-800/70 block">No Backspace, Omit space. Keeps &lt;em&gt;, adds closing tag, caret inside.</span>
+                        </div>
+                        <div>
+                            <code class="text-indigo-700 text-xs">:O:addr</code> 
+                            <span class="text-xs text-indigo-800/70 block">Omits End Char. Type "addr" + Space. Result has NO space.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case Options -->
+                <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-200 text-sm">
+                    <p class="font-bold text-emerald-800 mb-1">3. Capitalization (C, C1)</p>
+                     <div class="flex flex-col gap-2 mt-2">
+                        <div>
+                            <code class="text-emerald-700 text-xs">::twa</code> 
+                            <span class="text-xs text-emerald-800/70 block"><strong>Default (Smart):</strong><br>twa &rarr; Taiwan<br>Twa &rarr; Taiwan<br>TWA &rarr; TAIWAN</span>
+                        </div>
+                        <div>
+                            <code class="text-emerald-700 text-xs">:C:AHK</code> 
+                            <span class="text-xs text-emerald-800/70 block"><strong>Case Sensitive:</strong> Only triggers on CAPS.</span>
+                        </div>
+                         <div>
+                            <code class="text-emerald-700 text-xs">:C1:im</code> 
+                            <span class="text-xs text-emerald-800/70 block"><strong>No Conformity:</strong><br>Type "Im" &rarr; "iM" (Exact replacement).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regex Demo -->
+                <div class="bg-cyan-50 p-3 rounded-lg border border-cyan-200 text-sm">
+                    <p class="font-bold text-cyan-800 mb-1">4. Regex Triggers (JS RegExp)</p>
+                    <div class="flex flex-col gap-2 mt-2">
+                        <div>
+                            <code class="text-cyan-700 text-xs">/(\d+)x(\d+)/</code>
+                            <span class="text-xs text-cyan-800/70 block">Calculates product.<br>Type <strong>10x10</strong> or <strong>5x4</strong>.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Control -->
+                <div class="bg-gray-100 p-3 rounded-lg border border-gray-300 text-sm">
+                    <p class="font-bold text-gray-800 mb-1">5. Buffer & Config</p>
+                    <div class="flex flex-col gap-2 mt-2">
+                        <!-- Buttons Row -->
+                        <div class="flex gap-2">
+                            <button id="btnReset" class="flex-1 bg-white border border-gray-300 hover:bg-gray-50 text-xs py-1 rounded shadow-sm text-gray-700">Reset Buffer</button>
+                            <button id="btnTrigger" class="flex-1 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 text-xs py-1 rounded shadow-sm text-indigo-700 font-medium" title="Executes :*:btw">Trigger :*:btw</button>
+                        </div>
+                        
+                        <!-- NoMouse Option -->
+                        <div class="flex items-center gap-2 mt-1">
+                            <input type="checkbox" id="noMouseToggle" class="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
+                            <label for="noMouseToggle" class="text-xs text-gray-600">#Hotstring NoMouse</label>
+                        </div>
+                        <p class="text-[9px] text-gray-400">If checked, clicking in text area won't clear buffer.</p>
+
+                        <div class="mt-2">
+                            <label class="text-[10px] text-gray-500 font-bold uppercase">End Chars</label>
+                            <input type="text" id="endCharInput" value="-()[]{}':;&quot;/\,.?!&#10;&#09;" class="w-full text-xs font-mono border border-gray-300 rounded px-2 py-1 mt-1" title="Type characters to act as EndChars">
+                            <p class="text-[9px] text-gray-400 mt-1">Default includes Space/Enter/Tab</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search -->
+                <div class="bg-teal-50 p-3 rounded-lg border border-teal-200 text-sm">
+                    <p class="font-bold text-teal-800 mb-1">6. Search Hotstrings</p>
+                    <div class="flex flex-col gap-2 mt-2">
+                        <input type="text" id="searchInput" placeholder="Search content (e.g. 'Main St')" class="w-full text-xs border border-teal-300 rounded px-2 py-1 focus:ring-1 focus:ring-teal-500 outline-none">
+                        <button id="btnSearch" class="w-full bg-teal-100 border border-teal-300 hover:bg-teal-200 text-xs py-1 rounded text-teal-800">Find Triggers</button>
+                        <div id="searchResults" class="text-[10px] font-mono text-teal-900 bg-white/50 p-1 rounded hidden max-h-20 overflow-y-auto"></div>
+                    </div>
+                </div>
+
+                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-sm">
+                    <p class="font-bold text-slate-800 mb-1">Bulk Import (Supports Escapes)</p>
+                    <textarea id="importArea" class="w-full h-20 text-[10px] mono p-1 border border-slate-200 rounded resize-none" placeholder="Paste AHK script here...">
+::ml::Multi`nLine`nText
+::path::C:\Windows\System32
+:*:tabby::Col1`tCol2
+                    </textarea>
+                    <button id="btnImport" class="mt-2 w-full bg-indigo-600 text-white text-xs py-1 rounded">Import AHK Script</button>
+                </div>
+            </div>
+
+             <div class="mt-4 pt-4 border-t border-slate-100">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium">Mute Mode</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="muteToggle" class="sr-only peer">
+                        <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:bg-indigo-600 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
+                    </label>
+                </div>
+                <p class="text-[10px] text-slate-400">Hides typing until word completion.</p>
+            </div>
+        </section>
+
+        <!-- Right Panel: Playground -->
+        <section class="flex-1 bg-slate-50 flex flex-col p-6 gap-6 overflow-hidden">
+            
+            <!-- Testing Area -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col h-1/2 overflow-hidden relative">
+                <div class="bg-slate-50 border-b border-slate-200 px-4 py-2 flex items-center justify-between">
+                    <h2 class="text-sm font-semibold text-slate-700">Playground</h2>
+                    <span id="muteIndicator" class="hidden text-[10px] font-bold text-white bg-indigo-500 px-2 py-0.5 rounded animate-pulse">HIDDEN MODE</span>
+                </div>
+                <textarea id="testArea" class="flex-1 p-4 resize-none focus:outline-none text-slate-700 font-mono text-lg leading-relaxed" placeholder="Type triggers here... (Tab key inserts \t)"></textarea>
+                
+                <div id="loadingOverlay" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-20">
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                        <span class="text-xs font-bold text-indigo-600 uppercase">Processing...</span>
+                        <span class="text-[10px] text-slate-500">Input blocked</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Debug Panel -->
+            <div class="flex-1 bg-slate-900 rounded-xl shadow-sm border border-slate-800 flex flex-col overflow-hidden text-slate-300">
+                <div class="bg-slate-800/50 px-4 py-2 border-b border-slate-700 flex justify-between items-center">
+                    <h2 class="text-xs font-mono uppercase tracking-widest text-indigo-400">System State</h2>
+                    <span id="bufferLabel" class="text-[10px] text-slate-500 font-mono">MEMORY BUFFER</span>
+                </div>
+                <div class="flex-1 p-6 flex flex-col items-center justify-center text-center">
+                    <div id="bufferDisplay" class="text-3xl font-mono text-white break-all min-h-[1em]"></div>
+                    <div class="mt-2 text-[10px] text-slate-500 font-mono">Current Logic Buffer (Not DOM)</div>
+                    <div id="resetLog" class="mt-2 text-[10px] text-rose-400 font-mono h-4"></div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Hotstring Manager Library Reference -->
+    <script src="hotstring.js"></script>
+
+    <!-- Demo Config -->
+    <script>
+        const textArea = document.getElementById('testArea');
+        const bufferDisplay = document.getElementById('bufferDisplay');
+        const statusBadge = document.getElementById('statusBadge');
+        const loadOverlay = document.getElementById('loadingOverlay');
+        const resetLog = document.getElementById('resetLog');
+        
+        const hm = new HotstringManager(textArea);
+
+        window.onHotstringUpdate = (state) => {
+            bufferDisplay.textContent = state.buffer.replace(/ /g, '␣').replace(/\n/g, '↵').replace(/\t/g, '⇥');
+            if (state.isLocked) loadOverlay.classList.remove('hidden');
+            else loadOverlay.classList.add('hidden');
+
+            if (state.resetReason) {
+                resetLog.textContent = `[RESET: ${state.resetReason}]`;
+                resetLog.style.opacity = '1';
+                setTimeout(() => resetLog.style.opacity = '0', 1000);
+            }
+        };
+
+        window.onHotstringStatus = (msg) => {
+            statusBadge.textContent = msg;
+            if (msg.includes("LOCKED")) statusBadge.className = "text-xs font-bold bg-amber-100 text-amber-700 px-2 py-1.5 rounded";
+            else statusBadge.className = "text-xs font-bold bg-green-100 text-green-700 px-2 py-1.5 rounded";
+        };
+
+        // --- DEMO CONFIGURATION FOR REQUESTED OPTIONS ---
+
+        // 1. Asterisk (*): Immediate
+        hm.add(":*:btw", "by the way");
+
+        // 2. Question Mark (?): Inside Word
+        hm.add(":?:al", "airline"); // e.g., 'practic' + 'al' -> 'practicairline'
+
+        // 3. B0: No Backspace (plus simple {Left 5} hack support)
+        hm.add(":B0O:<em>", "</em>{Left 5}");
+
+        // 4. O: Omit End Char
+        // 'addr' + Space -> '123 Main St' (Space is eaten)
+        hm.add(":O:addr", "123 Main St");
+
+        // 5. C: Case Sensitive
+        // 'AHK' triggers, 'ahk' does not.
+        hm.add(":C:AHK", "AutoHotkey");
+
+        // 6. C1: No Conformity
+        // 'im' -> 'iM' (Normally 'Im' would yield 'IM')
+        hm.add(":C1:im", "iM");
+        
+        // 7. Default (Smart Conformity)
+        // twa -> Taiwan, Twa -> Taiwan, TWA -> TAIWAN
+        hm.add("::twa", "Taiwan");
+
+        // 8. Regex Demo (Calculation)
+        hm.addRegex(/(\d+)x(\d+)/, (match, n1, n2) => {
+            return parseInt(n1) * parseInt(n2);
+        });
+
+        // Bulk Import
+        document.getElementById('btnImport').addEventListener('click', () => {
+            const val = document.getElementById('importArea').value;
+            const res = hm.import(val);
+            if(res.errors.length > 0) alert(`Imported with errors: ${res.errors.length}`);
+            else alert(`Imported ${res.added} items.`);
+        });
+
+        document.getElementById('muteToggle').addEventListener('change', (e) => {
+            hm.setMuteMode(e.target.checked);
+            const ind = document.getElementById('muteIndicator');
+            e.target.checked ? ind.classList.remove('hidden') : ind.classList.add('hidden');
+            textArea.focus();
+        });
+
+        // --- NEW: Reset and EndChar controls ---
+        document.getElementById('btnReset').addEventListener('click', () => {
+            hm.reset();
+            const oldText = document.getElementById('btnReset').textContent;
+            document.getElementById('btnReset').textContent = "Buffer Cleared!";
+            setTimeout(() => document.getElementById('btnReset').textContent = oldText, 1000);
+        });
+        
+        document.getElementById('btnTrigger').addEventListener('click', () => {
+            hm.trigger(":*:btw");
+        });
+
+        // --- NEW: Search Hotstrings ---
+        document.getElementById('btnSearch').addEventListener('click', () => {
+            const query = document.getElementById('searchInput').value;
+            if(!query) return;
+            const results = hm.search(query);
+            const resultsDiv = document.getElementById('searchResults');
+            
+            resultsDiv.classList.remove('hidden');
+            if(results.length > 0) {
+                resultsDiv.innerHTML = results.map(r => `<div>• ${r}</div>`).join('');
+            } else {
+                resultsDiv.innerHTML = '<div class="text-slate-400 italic">No matches found.</div>';
+            }
+        });
+
+        document.getElementById('endCharInput').addEventListener('input', (e) => {
+            let val = e.target.value;
+            // Ensure we include Enter/Tab if they aren't typed (hard to type in input without submitting/navigating)
+            // For this demo, we append them implicitly if user types into the box
+            if (!val.includes('\n')) val += '\n';
+            if (!val.includes('\t')) val += '\t';
+            
+            hm.setEndChars(val);
+        });
+
+        document.getElementById('noMouseToggle').addEventListener('change', (e) => {
+            hm.setNoMouse(e.target.checked);
+        });
+
+        textArea.focus();
+
+    </script>
+</body>
+</html>
